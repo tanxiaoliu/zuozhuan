@@ -33,7 +33,7 @@
                                 <div class="am-u-sm-9 am-u-end">
                                     <div class="am-form-file">
                                         <button type="button"
-                                                class="upload-file am-btn am-btn-secondary am-radius">
+                                                class="upload-file am-btn am-btn-secondary am-radius" style="font-size: 1.24rem;padding: .6em 1em;">
                                             <i class="am-icon-cloud-upload"></i> 选择图片
                                         </button>
                                         <div class="uploader-list am-cf">
@@ -57,7 +57,7 @@
                                 <div class="am-u-sm-9 am-u-end">
                                     <div class="am-form-file">
                                         <button type="button"
-                                                class="upload-zhao am-btn am-btn-secondary am-radius">
+                                                class="upload-zhao am-btn am-btn-secondary am-radius" style="font-size: 1.24rem;padding: .6em 1em;">
                                             <i class="am-icon-cloud-upload"></i> 选择图片
                                         </button>
                                         <div class="uploader-list am-cf">
