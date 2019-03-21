@@ -95,7 +95,7 @@ class Category extends CategoryModel
      */
     public function getCategoryDetail($category_id)
     {
-        $data = $this->with(['image'])->where('category_id', $category_id)->find();
+        $data = $this->with(['image','zheng', 'zhao'])->where('category_id', $category_id)->find();
         return $data;
     }
 

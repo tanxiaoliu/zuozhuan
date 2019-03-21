@@ -21,8 +21,9 @@
                             <div class="am-form-group">
                                 <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">选择商户 </label>
                                 <div class="am-u-sm-9 am-u-end">
-                                    <select name="user[category_id]" required
-                                            data-am-selected="{searchBox: 1, btnSize: 'sm',  placeholder:'请选择商品分类'}">
+                                    <select name="user[category_id]"
+                                            data-am-selected="{searchBox: 1, btnSize: 'sm',  placeholder:'请选择商户'}">
+                                        <option value="0">普通用户</option>
                                         <?php if (isset($list)): foreach ($list as $key => $vl): ?>
                                             <option value="<?= $vl['category_id'] ?>"
                                                 <?= $user['category_id'] == $vl['category_id'] ? 'selected' : '' ?>><?= $vl['name'] ?></option>

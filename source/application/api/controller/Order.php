@@ -77,6 +77,7 @@ class Order extends Controller
         // 商品结算信息
         $model = new OrderModel;
         $order = $model->getCart($this->user);
+        $order['remark'] = input('remark');
         if (!$this->request->isPost()) {
             return $this->renderSuccess($order);
         }

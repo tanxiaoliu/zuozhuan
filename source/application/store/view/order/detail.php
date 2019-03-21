@@ -63,6 +63,7 @@
                                 <th>订单号</th>
                                 <th>实付款</th>
                                 <th>买家</th>
+                                <th>下单备注</th>
                                 <th>交易状态</th>
                             </tr>
                             <tr>
@@ -74,6 +75,9 @@
                                 <td>
                                     <p><?= $detail['user']['nickName'] ?></p>
                                     <p class="am-link-muted">(用户id：<?= $detail['user']['user_id'] ?>)</p>
+                                </td>
+                                <td>
+                                    <p><?= $detail['remark']?: '无' ?></p>
                                 </td>
                                 <td>
                                     <p>付款状态：

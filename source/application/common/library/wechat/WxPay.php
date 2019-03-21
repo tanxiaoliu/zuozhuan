@@ -141,8 +141,11 @@ class WxPay
             $categoryModel = new Category();
             $category = $categoryModel->getCategoryDetail($order['category_id']);
             if($category['phone']) {
-                $this->sendSms($order['wxapp_id'], $order['order_no'], $category['phone']);
+                $this->sendSms1($order['wxapp_id'], $order['order_no'], $category['phone']);
             }
+
+//            $this->sendSms($order['wxapp_id'], $order['order_no']);
+
             //推送小程序支付成功通知模板
             $userModel = new User();
             $token = $userModel->getToken();
@@ -185,14 +188,30 @@ class WxPay
      * @return mixed
      * @throws \think\Exception
      */
-    private function sendSms($wxapp_id, $order_no, $phone)
+    private function sendSms1($wxapp_id, $order_no, $phone)
     {
         // 短信配置信息
         $config = SettingModel::getItem('sms', $wxapp_id);
-        $config['accept_phone'] = $phone;//商户电话
+        $config['engine']['aliyun']['order_pay']['accept_phone'] = $phone;//商户电话
+        $SmsDriver = new SmsDriver($config);
+        return $SmsDriver->sendSms('order_pay', compact('order_no'), true);
+    }
+
+    /**
+     * 发送短信通知
+     * @param $wxapp_id
+     * @param $order_no
+     * @return mixed
+     * @throws \think\Exception
+     */
+    private function sendSms($wxapp_id, $order_no)
+    {
+        // 短信配置信息
+        $config = SettingModel::getItem('sms', $wxapp_id);
         $SmsDriver = new SmsDriver($config);
         return $SmsDriver->sendSms('order_pay', compact('order_no'));
     }
+
 
     /**
      * 返回状态给微信服务器

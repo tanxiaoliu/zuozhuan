@@ -52,6 +52,9 @@ class User extends Controller
             return $this->fetch('edit', compact('user', 'list'));
         }
         $user = $this->postData('user');
+        if($user['category_id'] != 0 && $model->where('category_id', $user['category_id'])->where('user_id', 'neq', $user['user_id'])->find()){
+            return $this->renderError('该商户已经绑定了其他用户，请重新绑定');
+        }
         if ($model->where('user_id', $user['user_id'])->update($user)) {
             return $this->renderSuccess('更新成功', url('user/index'));
         }

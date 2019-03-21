@@ -116,6 +116,7 @@ class Order extends OrderModel
             'pay_price' => $order['order_pay_price'],
             'express_price' => $order['express_price'],
             'mj_price' => $order['mj_price'],
+            'remark' => $order['remark'],
             'category_id' => $order['goods_list'][0]['category_id'],
         ]);
         // 订单商品列表
@@ -300,6 +301,26 @@ class Order extends OrderModel
     }
 
     /**
+     * 确认发货
+     * @param $data
+     * @return bool|false|int
+     */
+    public function shanghu_delivery($data)
+    {
+        if ($this['pay_status']['value'] == 10
+            || $this['delivery_status']['value'] == 20) {
+            $this->error = '该订单不合法';
+            return false;
+        }
+        return $this->save([
+            'express_company' => $data['express_company'],
+            'express_no' => $data['express_no'],
+            'delivery_status' => 20,
+            'delivery_time' => time(),
+        ]);
+    }
+
+    /**
      * 获取订单总数
      * @param $user_id
      * @param string $type
@@ -349,6 +370,27 @@ class Order extends OrderModel
     }
 
     /**
+     * 订单详情
+     * @param $order_id
+     * @param null $category_id
+     * @return null|static
+     * @throws BaseException
+     * @throws \think\exception\DbException
+     */
+    public static function getCategoryOrderDetail($order_id, $category_id)
+    {
+        if (!$order = self::get([
+            'order_id' => $order_id,
+            'category_id' => $category_id,
+            'order_status' => ['<>', 20]
+        ], ['goods' => ['image', 'spec', 'goods' => ['category']], 'address'])) {
+            throw new BaseException(['msg' => '订单不存在']);
+        }
+        return $order;
+    }
+
+
+    /**
      * 判断商品库存不足 (未付款订单)
      * @param $goodsList
      * @return bool
@@ -396,7 +438,7 @@ class Order extends OrderModel
      */
     public function savePrepayId ($order_no, $prepay_id)
     {
-        $this->where('order_no', $order_no)->save([
+        $this->where('order_no', $order_no)->update([
             'prepay_id' => $prepay_id,
         ]);
     }

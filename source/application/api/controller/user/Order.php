@@ -94,6 +94,24 @@ class Order extends Controller
     }
 
     /**
+     * 商户发货
+     * @param $order_id
+     * @return array
+     * @throws \app\common\exception\BaseException
+     * @throws \think\exception\DbException
+     */
+    public function shanghu_delivery($order_id)
+    {
+//        $model = OrderModel::getUserOrderDetail($order_id, $this->user['user_id']);
+        $model = OrderModel::getCategoryOrderDetail($order_id, $this->user['category_id']);
+        if ($model->shanghu_delivery($this->postData('order'))) {
+            return $this->renderSuccess('发货成功');
+        }
+        $error = $model->getError() ?: '发货失败';
+        return $this->renderError($error);
+    }
+
+    /**
      * 立即支付
      * @param $order_id
      * @return array
