@@ -44,7 +44,7 @@ return [
                     'goods.category/add',
                     'goods.category/edit',
                 ],
-            ],
+            ]
         ],
     ],
     'order' => [

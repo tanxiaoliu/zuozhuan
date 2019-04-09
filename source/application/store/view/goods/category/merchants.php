@@ -61,6 +61,10 @@
                                     <td class="am-text-middle"><?= $first['create_time'] ?></td>
                                     <td class="am-text-middle">
                                         <div class="tpl-table-black-operation">
+                                            <a href="<?= url('goods.category/settlement',
+                                                ['category_id' => $first['category_id']]) ?>">
+                                                <i class="am-icon-pencil"></i> 结算
+                                            </a>
                                             <a href="<?= url('/store/goods/add',
                                                 ['category_id' => $first['category_id']]) ?>">
                                                 <i class="am-icon-plus"></i> 添加商品

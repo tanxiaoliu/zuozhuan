@@ -6,6 +6,7 @@ use app\store\controller\Controller;
 use app\store\model\Category as CategoryModel;
 use app\store\model\Goods as GoodsModel;
 use app\store\model\Order as OrderModel;
+use app\store\model\Settlement as SettlementModel;
 
 /**
  * 商品分类
@@ -153,5 +154,39 @@ class Category extends Controller
         return $this->renderError($error);
     }
 
+    /**
+     * 结算列表
+     * @return mixed
+     */
+    public function settlement()
+    {
+        $category_id = input('category_id');
+        if(!$category_id){
+            $this->error('没有category_id');
+        }
+        $category = CategoryModel::get($category_id);
+
+        $model = new SettlementModel;
+        $list = $model->getSettlementList($category_id);
+        return $this->fetch('settlement', compact('list', 'category'));
+    }
+
+    /**
+     * 结算
+     * @param $id
+     * @return mixed
+     */
+    public function settlement_edit($id)
+    {
+        $model = SettlementModel::get($id);
+        if (!$this->request->isPost()) {
+            $category = CategoryModel::get($model['category_id']);
+            return $this->fetch('settlement_edit', compact('model', 'category'));
+        }
+        $post = $this->postData('set');
+        $post['status'] = 1;
+        $model->editSettlement($post['id'], $post);
+        $this->success('更新成功', 'goods.category/merchants');
+    }
 
 }

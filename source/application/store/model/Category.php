@@ -97,5 +97,4 @@ class Category extends CategoryModel
         return $data;
     }
 
-
 }
