@@ -11,7 +11,7 @@
                             <div class="am-form-group">
                                 <label class="am-u-sm-3 am-u-lg-2 am-form-label">结算日期 </label>
                                 <div class="am-u-sm-9 am-u-end">
-                                    <?= date('Y-m-d', strtotime($model['create_time']))?>
+                                    <?= date('Y-m-d', strtotime($model['statistics_date']))?>
                                 </div>
                             </div>
                             <div class="am-form-group">

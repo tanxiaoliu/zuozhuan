@@ -178,6 +178,7 @@ class Category extends Controller
      */
     public function settlement_edit($id)
     {
+        $this->updateSettlement();
         $model = SettlementModel::get($id);
         if (!$this->request->isPost()) {
             $category = CategoryModel::get($model['category_id']);
@@ -187,6 +188,36 @@ class Category extends Controller
         $post['status'] = 1;
         $model->editSettlement($post['id'], $post);
         $this->success('更新成功', 'goods.category/merchants');
+    }
+
+    /**
+     * 更新结算
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function updateSettlement(){
+        $dateArr = getDateFromRange('2019-03-01', date('Y-m-d', time()));
+        foreach ($dateArr as $val){
+            $beginYesterday = mktime(0,0,0,date('m', $val),date('d', $val)-1,date('Y', $val));
+            $endYesterday = mktime(0,0,0,date('m', $val),date('d', $val),date('Y', $val))-1;
+            $category = model('category')->field('category_id, create_time')->where('parent_id','>',0)->select();
+            foreach ($category as $vl) {
+                if($val >= strtotime(date('Y-m-d', strtotime($vl['create_time'])))) {
+                    $where['category_id'] = $vl['category_id'];
+                    $where['statistics_date'] = $val;
+                    $res = model('settlement')->where($where)->find();
+                    if (!$res) {
+                        $map['receipt_time'] = array('between time', $beginYesterday, $endYesterday);
+                        $where['price'] = model('order')->where($map)->sum('pay_price');
+                        $where['num'] = model('order')->where($map)->count();
+                        $where['create_time'] = time();
+                        $where['update_time'] = time();
+                        model('settlement')->insert($where);
+                    }
+                }
+            }
+        }
     }
 
 }
