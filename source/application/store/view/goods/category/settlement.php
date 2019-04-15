@@ -24,7 +24,7 @@
                             <tbody>
                             <?php if (!$list->isEmpty()): foreach ($list as $item): ?>
                                 <tr>
-                                    <td class="am-text-middle"><?= date('Y-m-d', strtotime($item['statistics_date']))?></td>
+                                    <td class="am-text-middle"><?= date('Y-m-d', $item['statistics_date'])?></td>
                                     <td class="am-text-middle"><?= $item['price'] ?></td>
                                     <td class="am-text-middle"><?= $item['num'] ?></td>
 
