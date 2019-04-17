@@ -199,21 +199,27 @@ class Category extends Controller
     public function updateSettlement(){
         $dateArr = getDateFromRange('2019-03-01', date('Y-m-d', time()));
         foreach ($dateArr as $val){
-            $beginYesterday = mktime(0,0,0,date('m', $val),date('d', $val)-1,date('Y', $val));
-            $endYesterday = mktime(0,0,0,date('m', $val),date('d', $val),date('Y', $val))-1;
+            $beginYesterday = date('Y-m-d H:i:s', mktime(0,0,0,date('m', $val),date('d', $val)-1,date('Y', $val)));
+            $endYesterday =date('Y-m-d H:i:s', mktime(0,0,0,date('m', $val),date('d', $val),date('Y', $val))-1);
             $category = model('category')->field('category_id, create_time')->where('parent_id','>',0)->select();
             foreach ($category as $vl) {
                 if($val >= strtotime(date('Y-m-d', strtotime($vl['create_time'])))) {
-                    $where['category_id'] = $vl['category_id'];
-                    $where['statistics_date'] = $val;
-                    $res = model('settlement')->where($where)->find();
-                    if (!$res) {
-                        $map['receipt_time'] = array('between time', $beginYesterday, $endYesterday);
-                        $where['price'] = model('order')->where($map)->sum('pay_price');
-                        $where['num'] = model('order')->where($map)->count();
-                        $where['create_time'] = time();
-                        $where['update_time'] = time();
-                        model('settlement')->insert($where);
+                    $map['order_status'] = 30;
+                    $map['receipt_status'] = 20;
+                    $map['category_id'] = $vl['category_id'];
+                    $num = model('order')->where($map)->whereTime('receipt_time', 'between', [$beginYesterday,$endYesterday])->count();
+                    if($num > 0) {
+                        $where['category_id'] = $vl['category_id'];
+                        $where['statistics_date'] = $val;
+                        $res = model('settlement')->where($where)->find();
+                        if (!$res) {
+                            $price = model('order')->where($map)->whereTime('receipt_time', 'between', [$beginYesterday,$endYesterday])->sum('pay_price');
+                            $where['create_time'] = time();
+                            $where['update_time'] = time();
+                            $where['num'] = $num;
+                            $where['price'] = $price;
+                            model('settlement')->insert($where);
+                        }
                     }
                 }
             }
